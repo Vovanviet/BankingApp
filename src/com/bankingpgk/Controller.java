@@ -11,7 +11,6 @@ public class Controller {
     String password;
     Double money;
     int countHis=0;
-    TransactionHistory history;
     List<TransactionHistory>histories=new ArrayList<>();
     Repository repository=new Repository();
     List<Account>accounts=repository.getDataGSON();
