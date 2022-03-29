@@ -306,7 +306,7 @@ public class Controller {
                         count++;
                         for (int j=0;j<accounts.size();j++){
                             if (username.equals(accounts.get(j).getUsername())){
-                                if (money <accounts.get(j).getCurrent()){
+                                if (accounts.get(j).getCurrent()-money>50){
                                     System.out.println("Enter password:");
                                     password=sc.next();
                                     if (password.equals(accounts.get(j).getPassword())) {
@@ -401,9 +401,9 @@ public class Controller {
                 check=true;
                 money();
             }
-//            else {
-//                throw new RuntimeException("username invalid");
-//            }
+            else {
+                throw new RuntimeException("username invalid");
+            }
         }
     }
     }
