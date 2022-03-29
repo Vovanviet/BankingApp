@@ -1,5 +1,7 @@
 package com.bankingpgk;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,7 +9,10 @@ public class Controller {
     String username;
     String serial;
     String password;
-    Double current;
+    Double money;
+    int countHis=0;
+    TransactionHistory history;
+    List<TransactionHistory>histories=new ArrayList<>();
     Repository repository=new Repository();
     List<Account>accounts=repository.getDataGSON();
     Scanner sc=new Scanner(System.in);
@@ -217,6 +222,9 @@ public class Controller {
                 withdrawMoney();
                 break;
             case 5:
+                transactionHistory();
+                break;
+            case 6:
                 loginSuccess();
                 break;
             default:
@@ -295,19 +303,24 @@ public class Controller {
                 for (int i = 0; i < accounts.size(); i++) {
                     if (serial.equals(accounts.get(i).getSeries_card())) {
                         System.out.println("Enter amount want to transfer:");
-                        current = sc.nextDouble();
+                        money = sc.nextDouble();
                         count++;
                         for (int j=0;j<accounts.size();j++){
                             if (username.equals(accounts.get(j).getUsername())){
-                                if (current<accounts.get(j).getCurrent()){
+                                if (money <accounts.get(j).getCurrent()){
                                     System.out.println("Enter password:");
                                     password=sc.next();
                                     if (password.equals(accounts.get(j).getPassword())) {
                                         //tien tru vao ng gui
-                                        accounts.get(j).setCurrent(accounts.get(j).getCurrent() - current);
+                                        accounts.get(j).setCurrent(accounts.get(j).getCurrent() - money);
                                         //tien duoc cong vao ng nhan
-                                        accounts.get(i).setCurrent(accounts.get(i).getCurrent()+current);
+                                        accounts.get(i).setCurrent(accounts.get(i).getCurrent()+ money);
                                         System.out.println("Success");
+                                        String des="Success";
+                                        countHis+=1;
+
+                                        histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
+                                        System.out.println(histories);
                                         check = true;
                                     }
                                 }else {
@@ -334,17 +347,23 @@ public class Controller {
             while (!check){
                 try {
                     System.out.println("Enter the amount of money you want to withdraw: ");
-                    current=sc.nextDouble();
+                    money =sc.nextDouble();
                     for (int i=0;i<accounts.size();i++){
                         if (username.equals(accounts.get(i).getUsername())){
                             count++;
                             System.out.println("Enter password:");
                             password=sc.next();
                             if (password.equals(accounts.get(i).getPassword())) {
-                                if (accounts.get(i).getCurrent() - current > 50) {
-                                    accounts.get(i).setCurrent(accounts.get(i).getCurrent() - current);
+                                if (accounts.get(i).getCurrent() - money > 50) {
+                                    accounts.get(i).setCurrent(accounts.get(i).getCurrent() - money);
                                     System.out.println("Current account:" + accounts.get(i).getCurrent());
+                                    String des="Success";
+                                    countHis+=1;
+
+                                    histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
+                                    System.out.println(histories);
                                     check = true;
+                                    money();
                                 } else {
                                     System.out.println("Current not correct");
                                 }
@@ -365,21 +384,41 @@ public class Controller {
     public void depositMoney(){
 
         System.out.println("Enter deposit transfer:");
-        current= sc.nextDouble();
+        money = sc.nextDouble();
         boolean check=false;
         while (!check){
 
 
         for (int i=0;i<accounts.size();i++) {
             if (username.equals(accounts.get(i).getUsername())) {
-                accounts.get(i).setCurrent(accounts.get(i).getCurrent() + current);
-                System.out.println("Current account:"+accounts.get(i).getCurrent());
+                accounts.get(i).setCurrent(accounts.get(i).getCurrent() + money);
+//                System.out.println("Current account:"+accounts.get(i).getCurrent());
+                String des="Success";
+                countHis+=1;
+
+                histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
+                System.out.println(histories);
+
                 check=true;
                 money();
-            }else {
-                throw new RuntimeException("username invalid");
             }
+//            else {
+//                throw new RuntimeException("username invalid");
+//            }
         }
     }
     }
+    public void transactionHistory(){
+        for (int i=0;i<countHis;i++){
+
+                System.out.println(histories.get(i).toString());
+
+        }
+    }
+
+    public static String formatMoney(long money){
+        DecimalFormat formater=new DecimalFormat("###,###,##0.00");
+        return formater.format(money);
+    }
+
 }
