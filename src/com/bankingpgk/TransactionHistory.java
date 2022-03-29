@@ -61,11 +61,10 @@ public class TransactionHistory {
     @Override
     public  String toString() {
         DateTimeFormatter myFormatter=DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "TransactionHistory: " +"\n"+
-                " id: " + id +"\n"+
-                " dayTrading: " + dayTrading.format(myFormatter) +"\n"+
-                " description: " + description + '\n' +
-                " beneficiaryAccount: " + beneficiaryAccount + '\n' +
-                " money: " + money+"VND" ;
+        return "\n"+ " Id: " + id +"\n"+
+                " Day Trading: " + dayTrading.format(myFormatter) +"\n"+
+                " Description: " + description + "\n" +
+                " Beneficiary Account: " + beneficiaryAccount +"\n"+
+                " Money: " + Controller.formatMoney(money)+"VND"+"\n------------------------------------------" ;
     }
 }
