@@ -16,19 +16,23 @@ public class Controller {
     List<Account>accounts=repository.getDataGSON();
     Scanner sc=new Scanner(System.in);
     public void home(){
-        Menu.mainMenu();
-        int choose=sc.nextInt();
-        switch (choose){
-            case 1:
-                login();
-                break;
-            case 2:
-                createNewAccount();
-                break;
-            default:
-                System.out.println("You are choose is not invalid!");
-                Menu.mainMenu();
-                break;
+        try {
+            Menu.mainMenu();
+            int choose=sc.nextInt();
+            switch (choose){
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    createNewAccount();
+                    break;
+                default:
+                    System.out.println("You are choose is not invalid!");
+                    Menu.mainMenu();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage()+",Try Again");;
         }
     }
     public void login(){
@@ -48,6 +52,7 @@ public class Controller {
                         checklogin = true;
                     } else {
                         loginFail();
+                        home();
                         break;
                     }
                 }
@@ -56,7 +61,7 @@ public class Controller {
 
     }
     public void loginSuccess(){
-        System.out.println("Welcome "+username+",You can the performance:");
+        System.out.println("Welcome "+username+",You can the performance number:");
         Menu.loginSuccess();
         int choose=sc.nextInt();
         sc.nextLine();
@@ -80,7 +85,10 @@ public class Controller {
                 System.out.println("See you again!");
                 System.exit(1);
                 break;
-            default:break;
+            default:
+                System.out.println("Number Invalid,Please Try Again");
+                loginSuccess();
+                break;
         }
     }
     public void changeUsername(){
@@ -315,11 +323,11 @@ public class Controller {
                                         //tien duoc cong vao ng nhan
                                         accounts.get(i).setCurrent(accounts.get(i).getCurrent()+ money);
                                         System.out.println("Success");
-                                        String des="Success";
+                                        String des= sc.nextLine();
                                         countHis+=1;
-
                                         histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
-                                        System.out.println(histories);
+                                        System.out.println(histories.get(histories.size()-1));
+
                                         check = true;
                                     }
                                 }else {
@@ -356,11 +364,12 @@ public class Controller {
                                 if (accounts.get(i).getCurrent() - money > 50) {
                                     accounts.get(i).setCurrent(accounts.get(i).getCurrent() - money);
                                     System.out.println("Current account:" + accounts.get(i).getCurrent());
-                                    String des="Success";
+                                    String des= sc.nextLine();
                                     countHis+=1;
 
                                     histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
-                                    System.out.println(histories);
+                                    System.out.println(histories.get(histories.size()-1));
+
                                     check = true;
                                     money();
                                 } else {
@@ -379,7 +388,6 @@ public class Controller {
                 }
             }
     }
-
     public void depositMoney(){
 
         System.out.println("Enter deposit transfer:");
@@ -391,31 +399,24 @@ public class Controller {
         for (int i=0;i<accounts.size();i++) {
             if (username.equals(accounts.get(i).getUsername())) {
                 accounts.get(i).setCurrent(accounts.get(i).getCurrent() + money);
-//                System.out.println("Current account:"+accounts.get(i).getCurrent());
-                String des="Success";
+                String des= sc.nextLine();
                 countHis+=1;
-
                 histories.add(new TransactionHistory(des,accounts.get(i).getSeries_card(),money));
-                System.out.println(histories);
-
+                System.out.println(histories.get(histories.size()-1));
+                System.out.println("Current account:"+accounts.get(i).getCurrent()+"VND");
                 check=true;
                 money();
             }
-            else {
-                throw new RuntimeException("username invalid");
-            }
+
         }
     }
     }
     public void transactionHistory(){
-        for (int i=0;i<countHis;i++){
-
-                System.out.println(histories.get(i).toString());
-
-        }
+        System.out.println("Transaction History:"+histories);
+        money();
     }
 
-    public static String formatMoney(long money){
+    public static String formatMoney(Double money){
         DecimalFormat formater=new DecimalFormat("###,###,##0.00");
         return formater.format(money);
     }
