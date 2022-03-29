@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Validate {
     public static final Pattern SerialRegex=Pattern.compile(
-    "(?=.*[0-9])+[0-9]{13}");
+    "[0-9]{10}");
     public static final Pattern PasswordRegex=Pattern.compile(
             "(?=.*[a-z])(?=.*[A-Z])(?=.*[.,-_;]).{7,15}",Pattern.CASE_INSENSITIVE);
     public static String validateSerial(String serial){
